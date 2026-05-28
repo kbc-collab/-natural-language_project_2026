@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem \"C:\\\\word_project\" -Recurse | Where-Object { !$_.PSIsContainer } | Select-Object @{N='파일';E={$_.FullName.Replace\\('C:\\\\word_project\\\\',''\\)}} | Format-Table -AutoSize)"
+    ]
+  }
+}

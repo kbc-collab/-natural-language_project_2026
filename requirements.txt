@@ -1,0 +1,33 @@
+# Core LLM & Agent Framework
+langchain==0.3.25
+langchain-openai==0.3.16
+langgraph==0.4.5
+langchain-community==0.3.24
+
+# Web Framework
+fastapi==0.115.12
+uvicorn[standard]==0.34.3
+
+# Database
+sqlalchemy==2.0.41
+asyncpg==0.30.0          # PostgreSQL async driver
+alembic==1.16.1          # DB 마이그레이션
+
+# Vector DB (평가팀/데이터셋팀 RAG 연동 시 활성화)
+# pinecone-client==3.0.0
+# chromadb==0.4.18
+
+# Validation & Config
+pydantic==2.11.4
+pydantic-settings==2.9.0
+python-dotenv==1.1.0
+
+# Async HTTP
+httpx==0.28.1
+
+# Testing
+pytest==8.3.5
+pytest-asyncio==0.26.0
+
+# Dev Tools
+python-multipart==0.0.20
