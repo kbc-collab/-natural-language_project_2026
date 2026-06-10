@@ -31,10 +31,10 @@ class TestCompetitorAgent:
         mock_response = MagicMock()
         mock_response.content = "열심히 하겠습니다. 최선을 다하겠습니다."
 
-        with patch("app.agents.competitor_agent.ChatOpenAI") as MockLLM:
-            instance = MockLLM.return_value
-            instance.ainvoke = AsyncMock(return_value=mock_response)
+        mock_llm = MagicMock()
+        mock_llm.ainvoke = AsyncMock(return_value=mock_response)
 
+        with patch("app.agents.competitor_agent.create_llm", return_value=mock_llm):
             agent = CompetitorAgent(CompetitorLevel.LOW)
             result = await agent.generate_answer(
                 question="자기소개를 해주세요.",
@@ -55,10 +55,10 @@ class TestCompetitorAgent:
         mock_response = MagicMock()
         mock_response.content = "테스트 답변입니다."
 
-        with patch("app.agents.competitor_agent.ChatOpenAI") as MockLLM:
-            instance = MockLLM.return_value
-            instance.ainvoke = AsyncMock(return_value=mock_response)
+        mock_llm = MagicMock()
+        mock_llm.ainvoke = AsyncMock(return_value=mock_response)
 
+        with patch("app.agents.competitor_agent.create_llm", return_value=mock_llm):
             pool = CompetitorAgentPool([CompetitorLevel.LOW, CompetitorLevel.HIGH])
             results = await pool.generate_all_answers(
                 question="강점을 말씀해주세요.",
@@ -74,10 +74,10 @@ class TestCompetitorAgent:
         """LLM 호출 실패 시 Fallback 답변이 반환되는지 확인"""
         from app.agents.competitor_agent import CompetitorAgentPool
 
-        with patch("app.agents.competitor_agent.ChatOpenAI") as MockLLM:
-            instance = MockLLM.return_value
-            instance.ainvoke = AsyncMock(side_effect=Exception("API 오류"))
+        mock_llm = MagicMock()
+        mock_llm.ainvoke = AsyncMock(side_effect=Exception("API 오류"))
 
+        with patch("app.agents.competitor_agent.create_llm", return_value=mock_llm):
             pool = CompetitorAgentPool([CompetitorLevel.LOW])
             results = await pool.generate_all_answers(
                 question="팀워크 경험을 말해주세요.",

@@ -92,6 +92,10 @@ class QuestionOut(BaseModel):
     question_id: str
     content: str
     intent: str
+    criteria: Optional[str] = Field(
+        default=None,
+        description="좋은 답변을 위한 평가 기준 (데이터셋 기반, 없으면 None)"
+    )
     time_limit_seconds: int = 120
 
 
@@ -130,6 +134,11 @@ class EvaluationRequest(BaseModel):
     question_id: str
     question_content: str
     question_intent: str
+    evaluation_criteria: Optional[str] = Field(
+        default=None,
+        description="좋은 답변을 위한 세부 평가 기준 (데이터셋 기반). "
+                    "Judge Agent가 채점 루브릭으로 활용하세요."
+    )
     answers: list[AnswerItem] = Field(
         ..., description="사용자 + AI 경쟁자 전체 답변 목록"
     )

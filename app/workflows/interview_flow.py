@@ -28,6 +28,7 @@ from langgraph.graph.message import add_messages
 from app.agents.interviewer_agent import InterviewerAgent
 from app.agents.competitor_agent import CompetitorAgentPool
 from app.agents.judge_agent import judge_agent
+from app.utils.dataset_loader import dataset_loader
 from app.schemas.models import (
     QuestionOut,
     AnswerItem,
@@ -113,6 +114,7 @@ async def node_generate_competitor_answers(state: InterviewState) -> dict:
         question_intent=current_question.intent,
         # 데이터셋팀 RAG 연동 포인트: industry_context를 벡터 DB 검색 결과로 교체
         industry_context="최신 IT 산업 트렌드 및 AI 전환 가속화",
+        interview_type_value=state["interview_type"],
     )
 
     # 사용자 답변 + 경쟁자 답변 합치기
@@ -136,10 +138,14 @@ async def node_evaluate_answers(state: InterviewState) -> dict:
     current_question = state["questions"][state["current_question_index"]]
     answers = state["all_answers"].get(current_question.question_id, [])
 
+    # 데이터셋에서 평가 기준 조회 (질문이 데이터셋에 없으면 None)
+    criteria = current_question.criteria or dataset_loader.get_criteria(current_question.content)
+
     eval_request = EvaluationRequest(
         question_id=current_question.question_id,
         question_content=current_question.content,
         question_intent=current_question.intent,
+        evaluation_criteria=criteria,
         answers=answers,
         target_job=state["target_job"],
     )
