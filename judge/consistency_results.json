@@ -1,0 +1,82 @@
+[
+  {
+    "question": "Transformer 아키텍처의 핵심 원리를 설명해보세요.",
+    "category": "AI/NLP 기초",
+    "n_trials": 5,
+    "user_scores": {
+      "values": [
+        93.3,
+        93.3,
+        93.3,
+        93.3,
+        93.3
+      ],
+      "mean": 93.3,
+      "stdev": 0.0,
+      "min": 93.3,
+      "max": 93.3
+    },
+    "competitor_scores": {
+      "values": [
+        40.0,
+        50.0,
+        40.0,
+        40.0,
+        40.0
+      ],
+      "mean": 42.0,
+      "stdev": 4.47,
+      "min": 40.0,
+      "max": 50.0
+    },
+    "winners": [
+      "A",
+      "A",
+      "A",
+      "A",
+      "A"
+    ],
+    "winner_consistency_pct": 100.0,
+    "verdict": "일관성 높음 ✅"
+  },
+  {
+    "question": "팀 프로젝트에서 갈등이 생겼을 때 어떻게 해결했나요?",
+    "category": "인성",
+    "n_trials": 5,
+    "user_scores": {
+      "values": [
+        90.0,
+        90.0,
+        90.0,
+        90.0,
+        90.0
+      ],
+      "mean": 90.0,
+      "stdev": 0.0,
+      "min": 90.0,
+      "max": 90.0
+    },
+    "competitor_scores": {
+      "values": [
+        30.0,
+        30.0,
+        30.0,
+        30.0,
+        30.0
+      ],
+      "mean": 30.0,
+      "stdev": 0.0,
+      "min": 30.0,
+      "max": 30.0
+    },
+    "winners": [
+      "A",
+      "A",
+      "A",
+      "A",
+      "A"
+    ],
+    "winner_consistency_pct": 100.0,
+    "verdict": "일관성 높음 ✅"
+  }
+]
