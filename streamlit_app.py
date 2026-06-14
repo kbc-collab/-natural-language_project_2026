@@ -8,7 +8,6 @@ AI Interview Arena — 채팅형 완성 버전
 """
 
 import os, json, random
-import pandas as pd
 import streamlit as st
 from anthropic import Anthropic
 
@@ -82,10 +81,28 @@ def get_client():
         st.stop()
     return Anthropic(api_key=key)
 
-# ── 데이터셋 ──────────────────────────────────────────────
-@st.cache_data
-def load_df():
-    return pd.read_csv("dataset_step2.csv")
+FIRST_Q_SYSTEM = """\
+당신은 AI/NLP 분야 전문 면접관입니다.
+주어진 직무, 면접 카테고리, 난이도에 맞는 첫 번째 면접 질문을 생성하세요.
+
+규칙:
+1. 반드시 한국어로 질문 1개만 출력하세요.
+2. 질문 본문만 출력하고 부연 설명은 없습니다.
+3. 난이도(하/중/상)에 맞는 깊이의 질문을 합니다.
+4. STAR 기법으로 답할 수 있는 질문을 선호합니다.\
+"""
+
+def generate_first_question(client, job, category, difficulty):
+    resp = client.messages.create(
+        model="claude-haiku-4-5-20251001",
+        max_tokens=200,
+        temperature=0.7,
+        system=FIRST_Q_SYSTEM,
+        messages=[{"role": "user", "content":
+            f"지원 직무: {job}\n면접 카테고리: {category}\n난이도: {difficulty}\n\n첫 번째 면접 질문을 생성하세요."
+        }],
+    )
+    return resp.content[0].text.strip()
 
 # ── rubric (C 브랜치 rubric.py 인라인) ───────────────────
 RUBRICS = {
@@ -271,11 +288,9 @@ with st.sidebar:
 
         st.markdown("---")
         if st.button("🎯 AI 면접 시작", type="primary"):
-            df = load_df()
-            pool = df[(df["카테고리"] == category) & (df["난이도"] == difficulty)]
-            if pool.empty:
-                pool = df[df["카테고리"] == category]
-            row = pool.sample(1).iloc[0]
+            client = get_client()
+            with st.spinner("면접관이 첫 질문을 준비 중..."):
+                first_q = generate_first_question(client, job, category, difficulty)
 
             st.session_state.update({
                 "started": True,
@@ -283,13 +298,13 @@ with st.sidebar:
                 "level_a": level_a,
                 "level_b": level_b,
                 "max_rounds": max_rounds,
-                "current_question": row["질문"],
+                "current_question": first_q,
                 "current_category": category,
-                "q_history": [row["질문"]],
+                "q_history": [first_q],
                 "waiting_answer": True,
                 "round": 1,
                 "elo": {"나": 1000, level_a: 1000, level_b: 1000},
-                "chat": [{"role":"interviewer","text":row["질문"],"q_idx":1}],
+                "chat": [{"role":"interviewer","text":first_q,"q_idx":1}],
                 "comp_results": [],
             })
             st.rerun()
